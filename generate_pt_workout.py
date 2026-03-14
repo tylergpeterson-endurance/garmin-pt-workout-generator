@@ -34,6 +34,7 @@ PT_EXERCISES = [
 
 REST_BETWEEN_SETS_SEC = 30.0
 REST_BETWEEN_EXERCISES_SEC = 45.0
+REST_BETWEEN_REPS_SEC = 10.0  # brief rest between timed hold reps
 HOLD_TIMER_THRESHOLD_SEC = 5  # >= this uses timed countdown per rep
 
 
@@ -90,6 +91,17 @@ def build_workout():
                 timed_step.notes = ex.get("notes", "")
                 workout_steps.append(timed_step)
                 rep_step_index = step_index
+                step_index += 1
+
+                # Brief rest between reps
+                rep_rest = WorkoutStepMessage()
+                rep_rest.message_index = step_index
+                rep_rest.workout_step_name = "Recover"
+                rep_rest.intensity = Intensity.REST
+                rep_rest.duration_type = WorkoutStepDuration.TIME
+                rep_rest.duration_time = REST_BETWEEN_REPS_SEC * 1000
+                rep_rest.target_type = WorkoutStepTarget.OPEN
+                workout_steps.append(rep_rest)
                 step_index += 1
 
                 # Repeat for number of reps
