@@ -31,9 +31,52 @@ Getting custom exercise names to display on a Garmin watch requires an **undocum
 
 None of this is in Garmin's official SDK documentation.
 
-## Quick Start
+## Chrome Extension (One-Click from PT Wired)
 
-### Requirements
+If your PT uses [PT Wired](https://rspt.mobile.ptwired.com), you can skip the Python script entirely — the Chrome extension extracts exercises directly from the page and generates the FIT file in-browser.
+
+### Install
+
+1. Open `chrome://extensions/`
+2. Enable **Developer mode** (toggle, top right)
+3. Click **Load unpacked** → select the `chrome-extension/` folder from this repo
+4. Pin the extension icon in your toolbar
+
+### Use
+
+1. Open your PT Wired exercise page in Chrome
+2. Click the **PT → Garmin FIT** extension icon
+3. Click **Extract Exercises** — review the list (names, sets, reps, hold times)
+4. Click **Generate & Download FIT File**
+5. Copy the `.fit` file to your watch:
+   - **Windows:** `[GARMIN DRIVE]:\GARMIN\NewFiles\` (USB Mass Storage mode)
+   - **Mac:** Use OpenMTP to copy to `GARMIN/NewFiles/`
+   - **Either:** Run `python deploy.py`
+
+### How It Works
+
+The extension uses **pure JavaScript FIT binary generation** — no Python, no server, no native messaging. It:
+
+1. Injects a script into the PT Wired page via `chrome.scripting.executeScript`
+2. Finds exercise names (`span.text-xl.font-medium.capitalize`) and badges (`div.bg-primary-500`)
+3. Parses badge text: "3 SETS", "10 REPS", "30 SECONDS HOLD", "2-3 SECONDS HOLD" (takes upper value of ranges)
+4. Generates a structurally identical FIT file to `generate_pt_workout.py` — same REPEAT loops, ExerciseTitleMessage, step metadata
+
+The JS FIT writer was validated byte-for-byte against `fit-tool` Python output (only difference: timestamp).
+
+### Supported Badge Formats
+
+| Badge Text | Parsed As |
+|-----------|-----------|
+| `3 SETS` | sets = 3 |
+| `10 REPS` | reps = 10 |
+| `30 SECONDS HOLD` | holdSeconds = 30 |
+| `2-3 SECONDS HOLD` | holdSeconds = 3 (upper value) |
+| `6-8 SECONDS HOLD` | holdSeconds = 8 (upper value) |
+
+## Python Script (Manual Entry)
+
+### Requirements (Python only — Chrome extension has none)
 
 ```bash
 pip install fit-tool
@@ -79,9 +122,10 @@ On your watch: **Strength → Menu (hold up) → Training → Workouts → Knee 
 
 | File | Purpose |
 |------|---------|
-| `generate_pt_workout.py` | Generates the `.FIT` workout file from your exercise list |
+| `chrome-extension/` | Chrome extension — one-click FIT generation from PT Wired |
+| `generate_pt_workout.py` | Python script — generates `.FIT` from a hardcoded exercise list |
 | `deploy.py` | Copies the `.FIT` file to a connected Garmin watch |
-| `Knee_Rehab_PT.fit` | Pre-built workout (post-surgical knee rehab, 8 exercises) |
+| `Knee_Rehab_PT.fit` | Pre-built workout (post-surgical knee rehab) |
 
 ## Compatibility
 
