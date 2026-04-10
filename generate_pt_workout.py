@@ -99,7 +99,7 @@ def build_workout():
                 rep_rest.workout_step_name = "Recover"
                 rep_rest.intensity = Intensity.REST
                 rep_rest.duration_type = WorkoutStepDuration.TIME
-                rep_rest.duration_time = REST_BETWEEN_REPS_SEC * 1000
+                rep_rest.duration_time = (5.0 if hold < 20 else REST_BETWEEN_REPS_SEC) * 1000
                 rep_rest.target_type = WorkoutStepTarget.OPEN
                 workout_steps.append(rep_rest)
                 step_index += 1
