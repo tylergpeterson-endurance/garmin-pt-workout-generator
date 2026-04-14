@@ -153,8 +153,9 @@ export function generateWorkoutFit({ workoutName, exercises }) {
         activeStep(d, si, stepName, WktDur.TIME, hold * 1000, notes, ei);
         si++;
 
-        // Brief rest between reps
-        restStep(d, si, 'Recover', hold < 20 ? 5000 : CFG.REST_REPS_MS);
+        // Brief rest between reps (shorter for short holds)
+        const repRestMs = hold <= CFG.SHORT_HOLD_MAX ? CFG.REST_SHORT_REPS_MS : CFG.REST_REPS_MS;
+        restStep(d, si, 'Recover', repRestMs);
         si++;
 
         // Repeat loop for reps (if > 1)
@@ -242,10 +243,11 @@ export function generateWorkoutFit({ workoutName, exercises }) {
     const notes = ex.notes || (hold > 0 ? `Hold ${hold}s each rep` : '');
 
     if (useTimed) {
+      const repRestMs = hold <= CFG.SHORT_HOLD_MAX ? CFG.REST_SHORT_REPS_MS : CFG.REST_REPS_MS;
       for (let s = 0; s < sets; s++) {
         const repStepIdx = si;
         activeStep(final, si, stepName, WktDur.TIME, hold * 1000, notes, ei); si++;
-        restStep(final, si, 'Recover', hold < 20 ? 5000 : CFG.REST_REPS_MS); si++;
+        restStep(final, si, 'Recover', repRestMs); si++;
         if (reps > 1) { repeatStep(final, si, repStepIdx, reps); si++; }
         if (s < sets - 1) { restStep(final, si, 'Rest', CFG.REST_SETS_MS); si++; }
       }

@@ -35,6 +35,8 @@ PT_EXERCISES = [
 REST_BETWEEN_SETS_SEC = 30.0
 REST_BETWEEN_EXERCISES_SEC = 45.0
 REST_BETWEEN_REPS_SEC = 10.0  # brief rest between timed hold reps
+REST_BETWEEN_SHORT_REPS_SEC = 5.0  # rest for short holds (<= SHORT_HOLD_MAX_SEC)
+SHORT_HOLD_MAX_SEC = 10  # holds at or below this get the shorter rest
 HOLD_TIMER_THRESHOLD_SEC = 5  # >= this uses timed countdown per rep
 
 
@@ -93,13 +95,14 @@ def build_workout():
                 rep_step_index = step_index
                 step_index += 1
 
-                # Brief rest between reps
+                # Brief rest between reps (shorter for short holds)
+                rep_rest_sec = REST_BETWEEN_SHORT_REPS_SEC if hold <= SHORT_HOLD_MAX_SEC else REST_BETWEEN_REPS_SEC
                 rep_rest = WorkoutStepMessage()
                 rep_rest.message_index = step_index
                 rep_rest.workout_step_name = "Recover"
                 rep_rest.intensity = Intensity.REST
                 rep_rest.duration_type = WorkoutStepDuration.TIME
-                rep_rest.duration_time = (5.0 if hold < 20 else REST_BETWEEN_REPS_SEC) * 1000
+                rep_rest.duration_time = rep_rest_sec * 1000
                 rep_rest.target_type = WorkoutStepTarget.OPEN
                 workout_steps.append(rep_rest)
                 step_index += 1

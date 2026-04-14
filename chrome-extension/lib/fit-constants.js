@@ -37,8 +37,10 @@ export const CRC_TABLE = [
 ];
 
 export const CFG = {
-  REST_REPS_MS: 10000,
-  REST_SETS_MS: 30000,
-  REST_EX_MS:   45000,
-  HOLD_THRESH:  5,
+  REST_REPS_MS:       10000,
+  REST_SHORT_REPS_MS: 5000,
+  SHORT_HOLD_MAX:     10,
+  REST_SETS_MS:       30000,
+  REST_EX_MS:         45000,
+  HOLD_THRESH:        5,
 };

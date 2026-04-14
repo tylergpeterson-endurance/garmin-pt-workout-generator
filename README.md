@@ -148,9 +148,14 @@ Each exercise in the `PT_EXERCISES` list takes these fields:
 Rest periods are defined at the top of `generate_pt_workout.py`:
 
 ```python
-REST_BETWEEN_SETS_SEC = 30.0       # Rest between sets of same exercise
-REST_BETWEEN_EXERCISES_SEC = 45.0  # Rest transitioning between exercises
+REST_BETWEEN_SETS_SEC = 30.0         # Rest between sets of same exercise
+REST_BETWEEN_EXERCISES_SEC = 45.0    # Rest transitioning between exercises
+REST_BETWEEN_REPS_SEC = 10.0         # Rest between timed hold reps (long holds)
+REST_BETWEEN_SHORT_REPS_SEC = 5.0    # Rest between timed hold reps (hold ≤ 10s)
+SHORT_HOLD_MAX_SEC = 10              # Holds at or below this get the shorter rest
 ```
+
+The Chrome extension mirrors these values in `chrome-extension/lib/fit-constants.js`.
 
 ## The Journey (for the curious)
 
