@@ -20,24 +20,16 @@ from fit_tool.profile.profile_type import (
     ExerciseCategory,
 )
 
-# ── PT Exercise Definitions ──────────────────────────────────────────
-PT_EXERCISES = [
-    {"name": "Long Sitting Hamstring Stretch", "sets": 2, "reps": 3,  "hold_sec": 30, "notes": "Hold 30s each rep"},
-    {"name": "Seated Calf Stretch (Belt)",     "sets": 1, "reps": 3,  "hold_sec": 30, "notes": "Hold 30s each rep"},
-    {"name": "Short Arc Quads (Foam Roller)",  "sets": 3, "reps": 10, "hold_sec": 2,  "notes": "Hold 2s at top"},
-    {"name": "Long Arc Quad",                  "sets": 3, "reps": 10, "hold_sec": 2,  "notes": "Hold 2s at top"},
-    {"name": "Ankle Plantarflexion w/ Band",   "sets": 3, "reps": 10, "hold_sec": 3,  "notes": "Hold 2-3s each rep"},
-    {"name": "Prone TKE",                      "sets": 2, "reps": 3,  "hold_sec": 20, "notes": "Hold 15-30s each rep"},
-    {"name": "Standing Hip Abduction (Band)",  "sets": 3, "reps": 10, "hold_sec": 3,  "notes": "Hold 2-3s each rep"},
-    {"name": "Standing Glute Squeeze",         "sets": 2, "reps": 5,  "hold_sec": 7,  "notes": "Hold 6-8s each rep"},
-]
-
-REST_BETWEEN_SETS_SEC = 30.0
-REST_BETWEEN_EXERCISES_SEC = 45.0
-REST_BETWEEN_REPS_SEC = 10.0  # brief rest between timed hold reps
-REST_BETWEEN_SHORT_REPS_SEC = 5.0  # rest for short holds (<= SHORT_HOLD_MAX_SEC)
-SHORT_HOLD_MAX_SEC = 10  # holds at or below this get the shorter rest
-HOLD_TIMER_THRESHOLD_SEC = 5  # >= this uses timed countdown per rep
+from pt_config import (
+    PT_EXERCISES,
+    REST_BETWEEN_SETS_SEC,
+    REST_BETWEEN_EXERCISES_SEC,
+    REST_BETWEEN_REPS_SEC,
+    REST_BETWEEN_SHORT_REPS_SEC,
+    SHORT_HOLD_MAX_SEC,
+    HOLD_TIMER_THRESHOLD_SEC,
+    WORKOUT_NAME,
+)
 
 
 def build_workout():
@@ -192,7 +184,7 @@ def build_workout():
 
     # ── Workout message ──────────────────────────────────────────────
     workout = WorkoutMessage()
-    workout.workout_name = "Knee Rehab PT"
+    workout.workout_name = WORKOUT_NAME
     workout.sport = Sport.TRAINING
     workout.sub_sport = SubSport.STRENGTH_TRAINING
     workout.num_valid_steps = len(workout_steps)

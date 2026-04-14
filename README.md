@@ -118,12 +118,31 @@ Or manually copy `Knee_Rehab_PT.fit` to `[GARMIN DRIVE]:\GARMIN\NewFiles\`
 
 On your watch: **Strength → Menu (hold up) → Training → Workouts → Knee Rehab PT**
 
+## Upload to Garmin Connect (optional)
+
+Sideloading via USB is the main path — it's the only way the watch displays your custom exercise names as the primary step label. But you can **also** upload the plan to Garmin Connect so it's visible in your workout library and can be scheduled or wirelessly synced to the watch as a backup.
+
+**Caveat:** Connect's workout JSON API has no field for custom step labels. Any exercise not in Garmin's ~47-entry built-in catalog shows as "Go"/"Rest" on the watch when synced from Connect (the exercise name is only in the "additional info" drill-down). We don't map to the catalog — exercises from PT are effectively unlimited. For accurate on-watch labels, keep using the USB sideload.
+
+### One-command upload
+
+```bash
+pip3 install -r requirements.txt
+python3 upload_to_connect.py --from-fit Knee_Rehab_PT.fit --console-snippet | pbcopy
+```
+
+Then paste the snippet into Chrome's DevTools console on `https://connect.garmin.com` (Cmd+Option+J; if prompted, type `allow pasting` once). The workout appears in your Connect library; use **"Send to Device"** to sync wirelessly.
+
+Why console paste? Garmin's SSO login endpoint is aggressively rate-limited; the browser path reuses your existing session and bypasses auth entirely. Under the hood it POSTs to `/gc-api/workout-service/workout` with the page's `connect-csrf-token`.
+
 ## Files
 
 | File | Purpose |
 |------|---------|
 | `chrome-extension/` | Chrome extension — one-click FIT generation from PT Wired |
 | `generate_pt_workout.py` | Python script — generates `.FIT` from a hardcoded exercise list |
+| `pt_config.py` | Exercise list + rest-timing constants (shared by generator and uploader) |
+| `upload_to_connect.py` | FIT→Connect-JSON converter + browser-console uploader |
 | `deploy.py` | Copies the `.FIT` file to a connected Garmin watch |
 | `Knee_Rehab_PT.fit` | Pre-built workout (post-surgical knee rehab) |
 
