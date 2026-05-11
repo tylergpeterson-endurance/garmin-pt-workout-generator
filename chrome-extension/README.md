@@ -61,8 +61,9 @@ pt-wired-extension/
 
 **DOM Extraction** (PT Wired page structure):
 - Exercise names: `<span>` with classes `text-xl text-gray-800 font-medium capitalize`
-- Badges: `<div class="bg-primary-500">` containing text like `"3 SETS"`, `"10 REPS"`, `"30 SECONDS HOLD"`
-- Regex-based badge parser handles variations (SECONDS/SECS/S, with/without HOLD)
+- Badges: any descendant of the exercise row whose **own** text (direct text-node children, not `textContent`) matches the badge regex — e.g. `"3 SETS"`, `"10 REPS"`, `"30 SECONDS HOLD"`. Text-driven so PT Wired theme/class renames don't break extraction.
+- Regex-based badge parser handles variations (SECONDS/SECS/S, with/without HOLD, ranges like `"2-3 SECONDS HOLD"`)
+- If a row is found but yields zero badge matches, the injected script logs `[PT-Wired-Extractor] row had no badge matches` to the inspected page's DevTools console — fast signal if the page changes again.
 
 ## Troubleshooting
 
@@ -78,3 +79,8 @@ pt-wired-extension/
 - **Chrome:** Manifest V3, tested on Chrome 120+
 - **Garmin:** Forerunner 970, should work on any Garmin that supports `.FIT` workout import
 - **Platforms:** Windows, macOS (extension is cross-platform)
+
+## Changelog
+
+- **1.0.1** — Fixed badge extraction after PT Wired re-themed the page. Badges (sets/reps/hold) were silently defaulting to `1×1` because the `.bg-primary-500` selector no longer matched the real badge elements. Replaced the class-based selector with a text-driven scan over the exercise row's descendants. No FIT-output changes.
+- **1.0.0** — Initial release.

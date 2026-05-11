@@ -24,6 +24,15 @@ function extractExercisesOnPage() {
       return null;
     }
 
+    // Element's own text (direct text-node children only), so an outer card whose
+    // textContent reads "3 sets10 reps2 seconds hold" does not produce a single
+    // false-positive match for the leaf badge regex.
+    function ownText(el) {
+      let s = '';
+      for (const n of el.childNodes) if (n.nodeType === Node.TEXT_NODE) s += n.nodeValue;
+      return s.trim();
+    }
+
     const exercises = [];
     const nameSpans = document.querySelectorAll(
       'span.text-xl.text-gray-800.font-medium.capitalize'
@@ -41,18 +50,26 @@ function extractExercisesOnPage() {
         || nameSpan.parentElement?.parentElement;
       if (!container) continue;
 
-      const badgeDivs = container.querySelectorAll('.bg-primary-500');
       let sets = 1, reps = 1, holdSeconds = 0;
+      let matched = 0;
 
-      for (const badge of badgeDivs) {
-        const parsed = parseBadge(badge.textContent.trim());
+      for (const el of container.querySelectorAll('*')) {
+        const t = ownText(el);
+        if (!t) continue;
+        const parsed = parseBadge(t);
         if (!parsed) continue;
+        matched++;
         switch (parsed.type) {
           case 'sets': sets = parsed.value; break;
           case 'reps': reps = parsed.value; break;
           case 'hold': holdSeconds = parsed.value; break;
         }
       }
+
+      if (matched === 0) {
+        console.warn('[PT-Wired-Extractor] row had no badge matches', name, container);
+      }
+
       exercises.push({ name, sets, reps, holdSeconds });
     }
     return { success: true, exercises };

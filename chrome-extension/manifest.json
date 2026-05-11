@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "PT → Garmin FIT",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Extract PT Wired exercises and generate Garmin .FIT workout files",
 
   "permissions": [

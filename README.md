@@ -58,7 +58,7 @@ If your PT uses [PT Wired](https://rspt.mobile.ptwired.com), you can skip the Py
 The extension uses **pure JavaScript FIT binary generation** — no Python, no server, no native messaging. It:
 
 1. Injects a script into the PT Wired page via `chrome.scripting.executeScript`
-2. Finds exercise names (`span.text-xl.font-medium.capitalize`) and badges (`div.bg-primary-500`)
+2. Finds exercise names (`span.text-xl.font-medium.capitalize`) and reads badge text from each exercise row via a text-driven descendant scan (resilient to PT Wired theme/class renames)
 3. Parses badge text: "3 SETS", "10 REPS", "30 SECONDS HOLD", "2-3 SECONDS HOLD" (takes upper value of ranges)
 4. Generates a structurally identical FIT file to `generate_pt_workout.py` — same REPEAT loops, ExerciseTitleMessage, step metadata
 
