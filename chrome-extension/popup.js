@@ -90,6 +90,9 @@ const filenameInput  = document.getElementById('filename');
 const btnGenerate    = document.getElementById('btn-generate');
 const btnReExtract   = document.getElementById('btn-re-extract');
 const summaryEl      = document.getElementById('summary');
+const selectedCountEl = document.getElementById('selected-count');
+const btnSelectAll   = document.getElementById('btn-select-all');
+const btnSelectNone  = document.getElementById('btn-select-none');
 
 let currentExercises = [];
 
@@ -137,6 +140,37 @@ function generateFilename(exercises) {
   const date = new Date();
   const ymd = date.toISOString().slice(0, 10).replace(/-/g, '');
   return `pt_workout_${ymd}.fit`;
+}
+
+// ── Selection ─────────────────────────────────────────────────────────────────
+// Checkbox state lives in the DOM; read it back when generating or updating counts.
+
+function getSelectedExercises() {
+  const selected = [];
+  exerciseListEl.querySelectorAll('.exercise-check').forEach((cb) => {
+    if (cb.checked) selected.push(currentExercises[Number(cb.dataset.index)]);
+  });
+  return selected;
+}
+
+function refreshSelectionUI() {
+  const selected = getSelectedExercises();
+  selectedCountEl.textContent = `${selected.length} of ${currentExercises.length} selected`;
+
+  if (selected.length === 0) {
+    summaryEl.textContent = 'Select at least one exercise';
+    btnGenerate.disabled = true;
+    return;
+  }
+
+  const totalSteps = countTotalSteps(selected);
+  summaryEl.textContent = `${totalSteps} workout step${totalSteps !== 1 ? 's' : ''} will be generated`;
+  btnGenerate.disabled = false;
+}
+
+function setAllChecked(checked) {
+  exerciseListEl.querySelectorAll('.exercise-check').forEach((cb) => { cb.checked = checked; });
+  refreshSelectionUI();
 }
 
 // ── Extract ─────────────────────────────────────────────────────────────────
@@ -201,24 +235,26 @@ function showReview() {
 
   setStatus(reviewStatusEl, `Found ${currentExercises.length} exercise${currentExercises.length !== 1 ? 's' : ''}`, 'success');
 
-  // Populate exercise list
+  // Populate exercise list with a checkbox per row (all selected by default)
   exerciseListEl.innerHTML = '';
-  for (const ex of currentExercises) {
+  currentExercises.forEach((ex, i) => {
     const li = document.createElement('li');
     li.className = 'exercise-item';
     li.innerHTML = `
-      <span class="exercise-name">${escapeHtml(ex.name)}</span>
+      <label class="exercise-label">
+        <input type="checkbox" class="exercise-check" data-index="${i}" checked>
+        <span class="exercise-name">${escapeHtml(ex.name)}</span>
+      </label>
       <span class="exercise-meta">${escapeHtml(formatExerciseMeta(ex))}</span>
     `;
     exerciseListEl.appendChild(li);
-  }
+  });
 
   // Auto-generate filename
   filenameInput.value = generateFilename(currentExercises);
 
-  // Summary
-  const totalSteps = countTotalSteps(currentExercises);
-  summaryEl.textContent = `${totalSteps} workout steps will be generated`;
+  // Selection-aware count + summary
+  refreshSelectionUI();
 }
 
 function escapeHtml(text) {
@@ -230,6 +266,12 @@ function escapeHtml(text) {
 // ── Generate FIT ────────────────────────────────────────────────────────────
 
 function doGenerate() {
+  const exercises = getSelectedExercises();
+  if (exercises.length === 0) {
+    setStatus(reviewStatusEl, 'Select at least one exercise to include.', 'warning');
+    return;
+  }
+
   btnGenerate.disabled = true;
 
   try {
@@ -238,17 +280,17 @@ function doGenerate() {
 
     const fitBytes = generateWorkoutFit({
       workoutName,
-      exercises: currentExercises,
+      exercises,
     });
 
     downloadFitFile(fitBytes, filename);
 
-    setStatus(reviewStatusEl, `✓ Downloaded ${filename} (${fitBytes.length} bytes)`, 'success');
+    setStatus(reviewStatusEl, `✓ Downloaded ${filename} (${fitBytes.length} bytes, ${exercises.length} exercise${exercises.length !== 1 ? 's' : ''})`, 'success');
     summaryEl.textContent = 'Copy to Garmin\\GARMIN\\NewFiles\\ or use deploy.py';
   } catch (err) {
     setStatus(reviewStatusEl, `FIT generation failed: ${err.message}`, 'error');
   } finally {
-    btnGenerate.disabled = false;
+    btnGenerate.disabled = getSelectedExercises().length === 0;
   }
 }
 
@@ -267,3 +309,11 @@ function doReExtract() {
 btnExtract.addEventListener('click', doExtract);
 btnGenerate.addEventListener('click', doGenerate);
 btnReExtract.addEventListener('click', doReExtract);
+
+// Live-update the count/summary whenever a checkbox toggles. Delegated on the
+// list so it survives the rows being rebuilt on each extract.
+exerciseListEl.addEventListener('change', (e) => {
+  if (e.target.classList.contains('exercise-check')) refreshSelectionUI();
+});
+btnSelectAll.addEventListener('click', () => setAllChecked(true));
+btnSelectNone.addEventListener('click', () => setAllChecked(false));
