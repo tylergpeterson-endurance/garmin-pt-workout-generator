@@ -65,6 +65,42 @@
       margin-left: 12px;
     }
 
+    /* Checkbox + name make up the clickable left side of each row */
+    .exercise-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      min-width: 0;
+      cursor: pointer;
+    }
+    .exercise-check {
+      width: auto;
+      flex-shrink: 0;
+      cursor: pointer;
+      accent-color: #0096d6;
+    }
+
+    /* Select all / none toolbar above the list */
+    .list-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      font-size: 11px;
+      color: #888;
+    }
+    .list-toolbar .link-btn {
+      width: auto;
+      background: none;
+      color: #0096d6;
+      padding: 0 2px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .list-toolbar .link-btn:hover { text-decoration: underline; opacity: 1; }
+    .list-toolbar .sep { color: #ccc; margin: 0 2px; }
+
     /* Buttons */
     button {
       width: 100%;
@@ -137,6 +173,16 @@
     <!-- Step 2: Review & Generate -->
     <div id="step-review" class="hidden">
       <div id="review-status" class="status success"></div>
+
+      <div class="list-toolbar">
+        <span id="selected-count"></span>
+        <span class="select-actions">
+          <button type="button" id="btn-select-all" class="link-btn">All</button>
+          <span class="sep">·</span>
+          <button type="button" id="btn-select-none" class="link-btn">None</button>
+        </span>
+      </div>
+
       <ul id="exercise-list" class="exercise-list"></ul>
 
       <div class="filename-row">
