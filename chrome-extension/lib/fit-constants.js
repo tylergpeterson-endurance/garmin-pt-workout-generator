@@ -41,6 +41,6 @@ export const CFG = {
   REST_SHORT_REPS_MS: 5000,
   SHORT_HOLD_MAX:     10,
   REST_SETS_MS:       30000,
-  REST_EX_MS:         45000,
+  REST_EX_MS:         10000,  // mirrors pt_config.REST_BETWEEN_EXERCISES_SEC (45s -> 10s, 2026-07-24)
   HOLD_THRESH:        5,
 };

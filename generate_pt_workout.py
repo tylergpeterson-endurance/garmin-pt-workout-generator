@@ -9,6 +9,7 @@ Uses ExerciseTitleMessage (undocumented) for custom step names.
 """
 
 import datetime
+import pathlib
 from fit_tool.fit_file_builder import FitFileBuilder
 from fit_tool.profile.messages.file_id_message import FileIdMessage
 from fit_tool.profile.messages.workout_message import WorkoutMessage
@@ -198,7 +199,9 @@ def build_workout():
 
     # ── Write file ───────────────────────────────────────────────────
     fit_file = builder.build()
-    output_path = "/home/claude/Knee_Rehab_PT.fit"
+    output_path = str(
+        pathlib.Path.home() / "Downloads" / f"{WORKOUT_NAME.replace(' ', '_')}.fit"
+    )
     fit_file.to_file(output_path)
     print(f"✅ Workout file created: {output_path}")
     print(f"   Workout steps: {len(workout_steps)}")

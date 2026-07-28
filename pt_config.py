@@ -3,24 +3,30 @@
 Single source of truth shared by the FIT generator and the Garmin Connect
 uploader. Import-only — no heavy deps here so lightweight consumers
 (e.g. --dry-run JSON preview) don't pull in fit_tool.
+
+Current program: HEP **Core** tier (~30'), per DJ-008 in the
+endurance-training repo — that markdown is the source of truth for the
+program, this file is just the generator input. Order is deliberate:
+floor block -> loaded standing block -> balance finish = three equipment
+pickups instead of six.
 """
 
 PT_EXERCISES = [
-    {"name": "Long Sitting Hamstring Stretch", "sets": 2, "reps": 3,  "hold_sec": 30, "notes": "Hold 30s each rep"},
-    {"name": "Seated Calf Stretch (Belt)",     "sets": 1, "reps": 3,  "hold_sec": 30, "notes": "Hold 30s each rep"},
-    {"name": "Short Arc Quads (Foam Roller)",  "sets": 3, "reps": 10, "hold_sec": 2,  "notes": "Hold 2s at top"},
-    {"name": "Long Arc Quad",                  "sets": 3, "reps": 10, "hold_sec": 2,  "notes": "Hold 2s at top"},
-    {"name": "Ankle Plantarflexion w/ Band",   "sets": 3, "reps": 10, "hold_sec": 3,  "notes": "Hold 2-3s each rep"},
-    {"name": "Prone TKE",                      "sets": 2, "reps": 3,  "hold_sec": 20, "notes": "Hold 15-30s each rep"},
-    {"name": "Standing Hip Abduction (Band)",  "sets": 3, "reps": 10, "hold_sec": 3,  "notes": "Hold 2-3s each rep"},
-    {"name": "Standing Glute Squeeze",         "sets": 2, "reps": 5,  "hold_sec": 7,  "notes": "Hold 6-8s each rep"},
+    {"name": "SL Bridges - RIGHT (involved)", "sets": 3, "reps": 10, "hold_sec": 0,  "notes": "Involved side, first while fresh. Ham LSI 80%"},
+    {"name": "SL Bridges - LEFT",             "sets": 2, "reps": 10, "hold_sec": 0,  "notes": "Maintenance dose - left is the 100% reference"},
+    {"name": "Hamstring Bridge on Ball",      "sets": 3, "reps": 10, "hold_sec": 0,  "notes": "Hamstring - LSI 80% deficit side"},
+    {"name": "Side Lying Hip Abduction",      "sets": 3, "reps": 10, "hold_sec": 3,  "notes": "Ankle weights. Glute med - knee tracking"},
+    {"name": "Goblet Squat (Kettlebell)",     "sets": 3, "reps": 10, "hold_sec": 0,  "notes": "Bilateral - the symmetry anchor"},
+    {"name": "Goblet RDL",                    "sets": 3, "reps": 10, "hold_sec": 0,  "notes": "Hamstring, bilateral hinge"},
+    {"name": "Slideboard Forward Lunge",      "sets": 3, "reps": 10, "hold_sec": 0,  "notes": "Sagittal only - no lateral this cycle"},
+    {"name": "Single Leg Balance",            "sets": 1, "reps": 3,  "hold_sec": 30, "notes": "Hold 30s each rep"},
 ]
 
 REST_BETWEEN_SETS_SEC = 30.0
-REST_BETWEEN_EXERCISES_SEC = 45.0
+REST_BETWEEN_EXERCISES_SEC = 10.0  # was 45s - too long, broke flow (Tyler, 2026-07-24)
 REST_BETWEEN_REPS_SEC = 10.0
 REST_BETWEEN_SHORT_REPS_SEC = 5.0
 SHORT_HOLD_MAX_SEC = 10
 HOLD_TIMER_THRESHOLD_SEC = 5
 
-WORKOUT_NAME = "Knee Rehab PT"
+WORKOUT_NAME = "HEP Core"
