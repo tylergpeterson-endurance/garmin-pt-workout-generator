@@ -52,22 +52,22 @@ PT_EXERCISES = [
     {"name": "Goblet Squat 40lb",        "sets": 3, "reps": 10, "hold_sec": 0,  "notes": "Bilateral symmetry anchor. Held 40 lb since 7/28"},
     {"name": "Slideboard Fwd Lunge R",   "sets": 3, "reps": 10, "hold_sec": 0,  "notes": "Sagittal. Varus cue - knee over middle of foot"},
     {"name": "Slideboard Fwd Lunge L",   "sets": 3, "reps": 10, "hold_sec": 0,  "notes": "Varus cue - knee over middle of foot"},
-    {"name": "DB Lateral Lunge R",       "sets": 3, "reps": 10, "hold_sec": 0,  "notes": "FRONTAL PLANE - open PT question. Film it. Varus cue"},
-    {"name": "DB Lateral Lunge L",       "sets": 3, "reps": 10, "hold_sec": 0,  "notes": "Stop on any pinpoint medial joint-line signal"},
+    {"name": "DB Lateral Lunge R",       "sets": 3, "reps": 10, "hold_sec": 0,  "rest_sec": 30, "notes": "FRONTAL PLANE - open PT question. Film it. Varus cue"},
+    {"name": "DB Lateral Lunge L",       "sets": 3, "reps": 10, "hold_sec": 0,  "rest_sec": 30, "notes": "Stop on any pinpoint medial joint-line signal"},
 
     # ── Block C: STANDING BODYWEIGHT ────────────────────────────────────
     {"name": "SL Heel Raise R",          "sets": 3, "reps": 10, "hold_sec": 0,  "notes": "Gastroc. Also direct prep for ankle-dominant pogos"},
     {"name": "SL Heel Raise L",          "sets": 3, "reps": 10, "hold_sec": 0,  "notes": "Slow lower"},
-    {"name": "SL Squat R",               "sets": 3, "reps": 10, "hold_sec": 0,  "notes": "Varus cue. Depth = what you control with good form"},
-    {"name": "SL Squat L",               "sets": 3, "reps": 10, "hold_sec": 0,  "notes": "Varus cue - knee over middle of foot"},
+    {"name": "SL Squat R",               "sets": 3, "reps": 10, "hold_sec": 0,  "rest_sec": 30, "notes": "Varus cue. Depth = what you control with good form"},
+    {"name": "SL Squat L",               "sets": 3, "reps": 10, "hold_sec": 0,  "rest_sec": 30, "notes": "Varus cue - knee over middle of foot"},
 
     # ── Block D: BAND ───────────────────────────────────────────────────
     {"name": "Fire Hydrant R band",      "sets": 3, "reps": 10, "hold_sec": 2,  "notes": "Standing. 2s hold at the top"},
     {"name": "Fire Hydrant L band",      "sets": 3, "reps": 10, "hold_sec": 2,  "notes": "Non-weightbearing, varus cue does not apply"},
 
     # ── Block E: BALANCE FINISH ─────────────────────────────────────────
-    {"name": "SL Balance R",             "sets": 2, "reps": 3,  "hold_sec": 30, "notes": "Full 2-set dose. Varus cue. 30s each rep"},
-    {"name": "SL Balance L",             "sets": 2, "reps": 3,  "hold_sec": 30, "notes": "Full 2-set dose. 30s each rep"},
+    {"name": "SL Balance R",             "sets": 2, "reps": 3,  "hold_sec": 30, "rest_sec": 30, "notes": "Full 2-set dose. Varus cue. 30s each rep"},
+    {"name": "SL Balance L",             "sets": 2, "reps": 3,  "hold_sec": 30, "rest_sec": 30, "notes": "Full 2-set dose. 30s each rep"},
 ]
 
 # ── Rest constants ───────────────────────────────────────────────────────
@@ -82,9 +82,26 @@ PT_EXERCISES = [
 #                                on 2026-07-28 (commit 3e23931). Already
 #                                applied; measured saving was 1:37.
 # So there is no unclaimed "45 -> 10 s" saving left. The only remaining
-# duration lever in this file is REST_BETWEEN_SETS_SEC, and cutting that
-# changes the training stimulus - it is a PT question, not a friction fix.
-REST_BETWEEN_SETS_SEC = 30.0
+# duration lever in this file is REST_BETWEEN_SETS_SEC - and it is the
+# right one: it is 85% of all enforced rest in the card.
+#
+# CUT 30 -> 15 s, Tyler 2026-08-04 ("I don't know if I need that much
+# recovery"). At 3x10 with bodyweight, a 5 lb ankle weight and a 40 lb
+# goblet at RPE 2, rest is not shaping the adaptation - what it protects
+# is FORM ON THE LAST SET. So this is not a PT question decided in
+# advance; it is an in-session observation. (An earlier note here called
+# it a PT question - too cautious for this load and RPE.)
+#
+# Four items keep 30 s via "rest_sec", because form-on-the-last-set is
+# exactly the risk there: SL Squat R/L and DB Lateral Lunge R/L are where
+# fatigue-driven frontal-plane collapse would show, and that IS the tear
+# mechanism. SL Balance keeps 30 s for a different reason - fatigue
+# corrupts a proprioceptive stimulus directly, and it costs 30 s total.
+#
+# WATCH SET 3 of the 15 s items on the debut. If the last set degrades -
+# knee drifting outside the foot, trunk lean, a rep that needs a reset -
+# put that exercise back to 30 s individually, not globally.
+REST_BETWEEN_SETS_SEC = 15.0  # 30 -> 15 (Tyler, 2026-08-04). Per-exercise override: "rest_sec"
 REST_BETWEEN_EXERCISES_SEC = 10.0  # was 45s - too long, broke flow (Tyler, 2026-07-24)
 REST_BETWEEN_REPS_SEC = 10.0
 REST_BETWEEN_SHORT_REPS_SEC = 5.0

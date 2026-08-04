@@ -46,18 +46,19 @@ def timed_floor_sec():
     hold_total = 0.0
     for ex_idx, ex in enumerate(PT_EXERCISES):
         sets, reps, hold = ex["sets"], ex["reps"], ex["hold_sec"]
+        set_rest = ex.get("rest_sec", REST_BETWEEN_SETS_SEC)
         if hold >= HOLD_TIMER_THRESHOLD_SEC:
             # Timed branch: sets are unrolled; each set is reps x [hold, rep-rest]
             rep_rest = REST_BETWEEN_SHORT_REPS_SEC if hold <= SHORT_HOLD_MAX_SEC else REST_BETWEEN_REPS_SEC
             hold_total += sets * reps * hold
             rest_total += sets * reps * rep_rest
-            rest_total += max(0, sets - 1) * REST_BETWEEN_SETS_SEC
+            rest_total += max(0, sets - 1) * set_rest
         elif sets > 1:
             # Rep-counted branch: the rest sits INSIDE the repeat loop, so it
             # fires once per set including after the last one. That trailing
             # rest is not waste - it is the equipment transition, measured at
             # ~31 s in the 2026-07-28 session.
-            rest_total += sets * REST_BETWEEN_SETS_SEC
+            rest_total += sets * set_rest
         if ex_idx < len(PT_EXERCISES) - 1:
             rest_total += REST_BETWEEN_EXERCISES_SEC
     return rest_total, hold_total
@@ -89,6 +90,9 @@ def build_workout():
 
         step_name = f"{ex['name']} ({hold}s hold)" if hold > 0 else ex["name"]
         unique_ex_id = ex_idx
+        # Per-exercise inter-set rest. Defaults to the global constant; an
+        # exercise sets "rest_sec" only where the default is wrong for it.
+        set_rest = ex.get("rest_sec", REST_BETWEEN_SETS_SEC)
 
         # ── Exercise Title (one per exercise) ────────────────────
         title = ExerciseTitleMessage()
@@ -147,7 +151,7 @@ def build_workout():
                     rest.workout_step_name = "Rest"
                     rest.intensity = Intensity.REST
                     rest.duration_type = WorkoutStepDuration.TIME
-                    rest.duration_time = REST_BETWEEN_SETS_SEC * 1000
+                    rest.duration_time = set_rest * 1000
                     rest.target_type = WorkoutStepTarget.OPEN
                     workout_steps.append(rest)
                     step_index += 1
@@ -174,7 +178,7 @@ def build_workout():
                 rest.workout_step_name = "Rest"
                 rest.intensity = Intensity.REST
                 rest.duration_type = WorkoutStepDuration.TIME
-                rest.duration_time = REST_BETWEEN_SETS_SEC * 1000
+                rest.duration_time = set_rest * 1000
                 rest.target_type = WorkoutStepTarget.OPEN
                 workout_steps.append(rest)
                 step_index += 1
