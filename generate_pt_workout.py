@@ -33,6 +33,36 @@ from pt_config import (
 )
 
 
+def timed_floor_sec():
+    """Machine-determined seconds in the card: every rest step + every timed hold.
+
+    EXACT, with no rep-tempo assumption — it walks the same branches
+    build_workout() does. Rep-counted work is athlete-paced and is NOT
+    included, so this is a FLOOR the card imposes before a single rep is
+    performed, not a prediction of session length. The measured wall-clock
+    number is still the one that settles the 3-day-split question.
+    """
+    rest_total = 0.0
+    hold_total = 0.0
+    for ex_idx, ex in enumerate(PT_EXERCISES):
+        sets, reps, hold = ex["sets"], ex["reps"], ex["hold_sec"]
+        if hold >= HOLD_TIMER_THRESHOLD_SEC:
+            # Timed branch: sets are unrolled; each set is reps x [hold, rep-rest]
+            rep_rest = REST_BETWEEN_SHORT_REPS_SEC if hold <= SHORT_HOLD_MAX_SEC else REST_BETWEEN_REPS_SEC
+            hold_total += sets * reps * hold
+            rest_total += sets * reps * rep_rest
+            rest_total += max(0, sets - 1) * REST_BETWEEN_SETS_SEC
+        elif sets > 1:
+            # Rep-counted branch: the rest sits INSIDE the repeat loop, so it
+            # fires once per set including after the last one. That trailing
+            # rest is not waste - it is the equipment transition, measured at
+            # ~31 s in the 2026-07-28 session.
+            rest_total += sets * REST_BETWEEN_SETS_SEC
+        if ex_idx < len(PT_EXERCISES) - 1:
+            rest_total += REST_BETWEEN_EXERCISES_SEC
+    return rest_total, hold_total
+
+
 def build_workout():
     builder = FitFileBuilder(auto_define=True)
 
@@ -208,10 +238,22 @@ def build_workout():
     print(f"   Exercise titles: {len(exercise_titles)}")
 
     print("\n── Workout Summary ──")
+    total_sets = 0
     for ex in PT_EXERCISES:
         mode = "TIMER" if ex["hold_sec"] >= HOLD_TIMER_THRESHOLD_SEC else "REPS"
         hold_note = f" × {ex['hold_sec']}s hold" if ex['hold_sec'] > 0 else ""
+        total_sets += ex["sets"]
         print(f"  [{mode}] {ex['name']}: {ex['sets']}s × {ex['reps']}r{hold_note}")
+
+    rest_s, hold_s = timed_floor_sec()
+    fmt = lambda s: f"{int(s)//60}:{int(s) % 60:02d}"
+    print(f"\n── Timed floor (EXACT — excludes athlete-paced rep work) ──")
+    print(f"  Entries: {len(PT_EXERCISES)}   Sets: {total_sets}")
+    print(f"  Enforced rest:  {fmt(rest_s)}")
+    print(f"  Timed holds:    {fmt(hold_s)}")
+    print(f"  FLOOR:          {fmt(rest_s + hold_s)}  ← before a single rep is performed")
+    print("  ⏱  TIME THE ACTUAL SESSION. A measured number is the argument")
+    print("     for the 3-day-split re-ask; this estimate is not.")
 
     return output_path
 
