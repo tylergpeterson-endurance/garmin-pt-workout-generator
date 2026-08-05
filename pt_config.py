@@ -17,6 +17,13 @@ Three encoding decisions, all deliberate:
    right-side set." Splitting puts that ordering on the watch instead of
    in prose — the device card is the control mechanism. 11 prescribed
    exercises -> 21 entries. Same physical work, explicit sequencing.
+   /!\ EXCEPTION (2026-08-05): SL Squat and SL Goblet RDL are ALTERNATING
+   — one entry each, reps=20 (= 10/side/set), start R. The provider app
+   text specifies alternation for the squat ("...then switch sides");
+   Tyler extended it to the RDL (PT confirm queued in the P1 batch).
+   Alternation halves continuous single-leg TUT, which protects
+   form-on-the-last-set — the same rationale as their 30 s rest_sec.
+   21 -> 19 entries. See endurance-training handover s42 §8.
 
 2. LOADS LIVE IN THE STEP NAME, not just the notes. Same reason. The two
    that matter: abduction is 5 lb ON THE WORKING LEG (resolved 2026-08-04
@@ -47,8 +54,7 @@ PT_EXERCISES = [
     {"name": "Side Abduction L 5lb",     "sets": 3, "reps": 10, "hold_sec": 3,  "notes": "5 lb. Non-weightbearing, varus cue does not apply"},
 
     # ── Block B: LOADED STANDING (kettlebell, DB, slideboard) ───────────
-    {"name": "SL Goblet RDL R BW-ltKB",  "sets": 3, "reps": 10, "hold_sec": 0,  "notes": "BW or LIGHT KB. NOT the retired 35 lb. Control rule"},
-    {"name": "SL Goblet RDL L BW-ltKB",  "sets": 3, "reps": 10, "hold_sec": 0,  "notes": "Load = what you control with good form. Varus cue"},
+    {"name": "SL Goblet RDL ALT BW-ltKB", "sets": 3, "reps": 20, "hold_sec": 0,  "notes": "START R, alternate every rep, 10/side. Light KB = control rule"},
     {"name": "Goblet Squat 40lb",        "sets": 3, "reps": 10, "hold_sec": 0,  "notes": "Bilateral symmetry anchor. Held 40 lb since 7/28"},
     {"name": "Slideboard Fwd Lunge R",   "sets": 3, "reps": 10, "hold_sec": 0,  "notes": "Sagittal. Varus cue - knee over middle of foot"},
     {"name": "Slideboard Fwd Lunge L",   "sets": 3, "reps": 10, "hold_sec": 0,  "notes": "Varus cue - knee over middle of foot"},
@@ -58,8 +64,7 @@ PT_EXERCISES = [
     # ── Block C: STANDING BODYWEIGHT ────────────────────────────────────
     {"name": "SL Heel Raise R",          "sets": 3, "reps": 10, "hold_sec": 0,  "notes": "Gastroc. Also direct prep for ankle-dominant pogos"},
     {"name": "SL Heel Raise L",          "sets": 3, "reps": 10, "hold_sec": 0,  "notes": "Slow lower"},
-    {"name": "SL Squat R",               "sets": 3, "reps": 10, "hold_sec": 0,  "rest_sec": 30, "notes": "Varus cue. Depth = what you control with good form"},
-    {"name": "SL Squat L",               "sets": 3, "reps": 10, "hold_sec": 0,  "rest_sec": 30, "notes": "Varus cue - knee over middle of foot"},
+    {"name": "SL Squat ALT start R",     "sets": 3, "reps": 20, "hold_sec": 0,  "rest_sec": 30, "notes": "Alternate every rep, 10/side. Varus cue. Depth = control"},
 
     # ── Block D: BAND ───────────────────────────────────────────────────
     {"name": "Fire Hydrant R band",      "sets": 3, "reps": 10, "hold_sec": 2,  "notes": "Standing. 2s hold at the top"},
@@ -108,4 +113,4 @@ REST_BETWEEN_SHORT_REPS_SEC = 5.0
 SHORT_HOLD_MAX_SEC = 10
 HOLD_TIMER_THRESHOLD_SEC = 5
 
-WORKOUT_NAME = "HEP Full 11"
+WORKOUT_NAME = "HEP Full 11b"  # b = SL Squat + RDL alternating (2026-08-05)
