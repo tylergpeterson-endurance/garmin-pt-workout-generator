@@ -84,7 +84,7 @@ pip install fit-tool
 
 ### 1. Edit your exercises
 
-Open `generate_pt_workout.py` and modify the `PT_EXERCISES` list:
+Open `pt_config.py` and modify the `PT_EXERCISES` list (also set `WORKOUT_NAME` — it names both the workout on the watch and the output file):
 
 ```python
 PT_EXERCISES = [
@@ -112,11 +112,11 @@ Then run:
 python deploy.py
 ```
 
-Or manually copy `Knee_Rehab_PT.fit` to `[GARMIN DRIVE]:\GARMIN\NewFiles\`
+The generator writes to `~/Downloads/<WORKOUT_NAME>.fit` (spaces become underscores), and `deploy.py` picks up the same name from `pt_config.py`. To copy it by hand, drop that file in `[GARMIN DRIVE]:\GARMIN\NewFiles\`.
 
 ### 4. Start the workout
 
-On your watch: **Strength → Menu (hold up) → Training → Workouts → Knee Rehab PT**
+On your watch: **Strength → Menu (hold up) → Training → Workouts → `<WORKOUT_NAME>`**
 
 ## Upload to Garmin Connect (optional)
 
@@ -164,11 +164,11 @@ Each exercise in the `PT_EXERCISES` list takes these fields:
 
 ## Adjustable Timing
 
-Rest periods are defined at the top of `generate_pt_workout.py`:
+Rest periods are defined in `pt_config.py`:
 
 ```python
 REST_BETWEEN_SETS_SEC = 30.0         # Rest between sets of same exercise
-REST_BETWEEN_EXERCISES_SEC = 45.0    # Rest transitioning between exercises
+REST_BETWEEN_EXERCISES_SEC = 10.0    # Rest transitioning between exercises
 REST_BETWEEN_REPS_SEC = 10.0         # Rest between timed hold reps (long holds)
 REST_BETWEEN_SHORT_REPS_SEC = 5.0    # Rest between timed hold reps (hold ≤ 10s)
 SHORT_HOLD_MAX_SEC = 10              # Holds at or below this get the shorter rest
