@@ -75,6 +75,44 @@ PT_EXERCISES = [
     {"name": "SL Balance L",             "sets": 2, "reps": 3,  "hold_sec": 30, "rest_sec": 30, "notes": "Full 2-set dose. 30s each rep"},
 ]
 
+# ── FLOOR CARD (2026-08-14) ─────────────────────────────────────────────
+# Travel/short-day card: shorten-don't-zero made loadable. Supersedes the
+# 2026-08-07 "HEP Floor 5", which was built from an ephemeral, uncommitted
+# subset edit and carried only the RIGHT-side entries for bridges, curls
+# and abduction — Tyler caught it live 2026-08-14 (had to pause the watch
+# to do every left side). Three fixes, all Tyler 2026-08-14:
+#   1. SYMMETRIC — every unilateral item has explicit R then L entries.
+#   2. SL Heel Raise added (prescription #6; pogo-prep, travels well).
+#   3. RDL + SL Squat SPLIT by side (all R sets, then all L) instead of
+#      ALT-every-rep — "too complicated switching every rep." FLOOR CARD
+#      ONLY: the full 11b keeps ALT (the provider-app text names it for
+#      the squat). Same dose either way: 10/side/set x 3.
+#      Split restores continuous single-leg TUT, which ALT existed to
+#      halve -> both split items take the 30 s rest_sec, per this file's
+#      own form-on-the-last-set rule. PT sanity-check of floor
+#      composition + the split is queued in the P1 batch.
+FLOOR_EXERCISES = [
+    # ── Block A: FLOOR (mat, gym ball, ankle weights) ───────────────────
+    {"name": "SL Bridge R (involved)",   "sets": 3, "reps": 10, "hold_sec": 0,  "notes": "Involved side first while fresh. Ham LSI 86%"},
+    {"name": "SL Bridge L",              "sets": 3, "reps": 10, "hold_sec": 0,  "notes": "Symmetric 3x10 - do NOT add a 4th right set"},
+    {"name": "SL Ham Curl Ball R",       "sets": 3, "reps": 10, "hold_sec": 0,  "notes": "Deficit side first. Ham LSI 86%"},
+    {"name": "SL Ham Curl Ball L",       "sets": 3, "reps": 10, "hold_sec": 0,  "notes": "Hamstring - expect diffuse DOMS, that is adherence"},
+    {"name": "Side Abduction R 5lb",     "sets": 3, "reps": 10, "hold_sec": 3,  "notes": "5 lb ankle weight on the WORKING leg. Glute med"},
+    {"name": "Side Abduction L 5lb",     "sets": 3, "reps": 10, "hold_sec": 3,  "notes": "5 lb. Non-weightbearing, varus cue does not apply"},
+
+    # ── Block B: LOADED STANDING ────────────────────────────────────────
+    {"name": "SL Goblet RDL R",          "sets": 3, "reps": 10, "hold_sec": 0,  "rest_sec": 30, "notes": "SPLIT by side (floor card). Light KB = control rule. Varus cue"},
+    {"name": "SL Goblet RDL L",          "sets": 3, "reps": 10, "hold_sec": 0,  "rest_sec": 30, "notes": "Varus cue - knee over middle of foot"},
+
+    # ── Block C: STANDING BODYWEIGHT ────────────────────────────────────
+    {"name": "SL Heel Raise R",          "sets": 3, "reps": 10, "hold_sec": 0,  "notes": "Gastroc. Also direct prep for ankle-dominant pogos"},
+    {"name": "SL Heel Raise L",          "sets": 3, "reps": 10, "hold_sec": 0,  "notes": "Slow lower"},
+    {"name": "SL Squat R",               "sets": 3, "reps": 10, "hold_sec": 0,  "rest_sec": 30, "notes": "SPLIT by side (floor card). Varus cue. Depth = control"},
+    {"name": "SL Squat L",               "sets": 3, "reps": 10, "hold_sec": 0,  "rest_sec": 30, "notes": "Varus cue - knee over middle of foot"},
+]
+
+FLOOR_WORKOUT_NAME = "HEP Floor 6"  # 6 exercises, 12 entries; supersedes HEP Floor 5
+
 # ── Rest constants ───────────────────────────────────────────────────────
 # /!\ VERIFIED 2026-08-04, and it corrected a wrong belief in the
 # endurance-training backlog. Two DIFFERENT gaps exist and they are not

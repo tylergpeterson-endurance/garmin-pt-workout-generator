@@ -23,6 +23,7 @@ from fit_tool.profile.profile_type import (
 
 from pt_config import (
     PT_EXERCISES,
+    FLOOR_EXERCISES,
     REST_BETWEEN_SETS_SEC,
     REST_BETWEEN_EXERCISES_SEC,
     REST_BETWEEN_REPS_SEC,
@@ -30,10 +31,16 @@ from pt_config import (
     SHORT_HOLD_MAX_SEC,
     HOLD_TIMER_THRESHOLD_SEC,
     WORKOUT_NAME,
+    FLOOR_WORKOUT_NAME,
 )
 
+CARDS = {
+    "full": (PT_EXERCISES, WORKOUT_NAME),
+    "floor": (FLOOR_EXERCISES, FLOOR_WORKOUT_NAME),
+}
 
-def timed_floor_sec():
+
+def timed_floor_sec(exercises=PT_EXERCISES):
     """Machine-determined seconds in the card: every rest step + every timed hold.
 
     EXACT, with no rep-tempo assumption — it walks the same branches
@@ -44,7 +51,7 @@ def timed_floor_sec():
     """
     rest_total = 0.0
     hold_total = 0.0
-    for ex_idx, ex in enumerate(PT_EXERCISES):
+    for ex_idx, ex in enumerate(exercises):
         sets, reps, hold = ex["sets"], ex["reps"], ex["hold_sec"]
         set_rest = ex.get("rest_sec", REST_BETWEEN_SETS_SEC)
         if hold >= HOLD_TIMER_THRESHOLD_SEC:
@@ -59,12 +66,12 @@ def timed_floor_sec():
             # rest is not waste - it is the equipment transition, measured at
             # ~31 s in the 2026-07-28 session.
             rest_total += sets * set_rest
-        if ex_idx < len(PT_EXERCISES) - 1:
+        if ex_idx < len(exercises) - 1:
             rest_total += REST_BETWEEN_EXERCISES_SEC
     return rest_total, hold_total
 
 
-def build_workout():
+def build_workout(exercises=PT_EXERCISES, workout_name=WORKOUT_NAME):
     builder = FitFileBuilder(auto_define=True)
 
     # ── File ID ──────────────────────────────────────────────────────
@@ -82,7 +89,7 @@ def build_workout():
     step_index = 0
     title_index = 0
 
-    for ex_idx, ex in enumerate(PT_EXERCISES):
+    for ex_idx, ex in enumerate(exercises):
         sets = ex["sets"]
         reps = ex["reps"]
         hold = ex["hold_sec"]
@@ -206,7 +213,7 @@ def build_workout():
                 step_index += 1
 
         # ── Rest between exercises ───────────────────────────────
-        if ex_idx < len(PT_EXERCISES) - 1:
+        if ex_idx < len(exercises) - 1:
             transition = WorkoutStepMessage()
             transition.message_index = step_index
             transition.workout_step_name = "Next Exercise"
@@ -219,7 +226,7 @@ def build_workout():
 
     # ── Workout message ──────────────────────────────────────────────
     workout = WorkoutMessage()
-    workout.workout_name = WORKOUT_NAME
+    workout.workout_name = workout_name
     workout.sport = Sport.TRAINING
     workout.sub_sport = SubSport.STRENGTH_TRAINING
     workout.num_valid_steps = len(workout_steps)
@@ -234,7 +241,7 @@ def build_workout():
     # ── Write file ───────────────────────────────────────────────────
     fit_file = builder.build()
     output_path = str(
-        pathlib.Path.home() / "Downloads" / f"{WORKOUT_NAME.replace(' ', '_')}.fit"
+        pathlib.Path.home() / "Downloads" / f"{workout_name.replace(' ', '_')}.fit"
     )
     fit_file.to_file(output_path)
     print(f"✅ Workout file created: {output_path}")
@@ -243,16 +250,16 @@ def build_workout():
 
     print("\n── Workout Summary ──")
     total_sets = 0
-    for ex in PT_EXERCISES:
+    for ex in exercises:
         mode = "TIMER" if ex["hold_sec"] >= HOLD_TIMER_THRESHOLD_SEC else "REPS"
         hold_note = f" × {ex['hold_sec']}s hold" if ex['hold_sec'] > 0 else ""
         total_sets += ex["sets"]
         print(f"  [{mode}] {ex['name']}: {ex['sets']}s × {ex['reps']}r{hold_note}")
 
-    rest_s, hold_s = timed_floor_sec()
+    rest_s, hold_s = timed_floor_sec(exercises)
     fmt = lambda s: f"{int(s)//60}:{int(s) % 60:02d}"
     print(f"\n── Timed floor (EXACT — excludes athlete-paced rep work) ──")
-    print(f"  Entries: {len(PT_EXERCISES)}   Sets: {total_sets}")
+    print(f"  Entries: {len(exercises)}   Sets: {total_sets}")
     print(f"  Enforced rest:  {fmt(rest_s)}")
     print(f"  Timed holds:    {fmt(hold_s)}")
     print(f"  FLOOR:          {fmt(rest_s + hold_s)}  ← before a single rep is performed")
@@ -263,4 +270,9 @@ def build_workout():
 
 
 if __name__ == "__main__":
-    build_workout()
+    import argparse
+    parser = argparse.ArgumentParser(description="Build a HEP workout .fit")
+    parser.add_argument("--card", choices=CARDS, default="full",
+                        help="which card to build (default: full)")
+    args = parser.parse_args()
+    build_workout(*CARDS[args.card])
