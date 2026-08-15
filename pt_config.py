@@ -83,14 +83,19 @@ PT_EXERCISES = [
 # to do every left side). Three fixes, all Tyler 2026-08-14:
 #   1. SYMMETRIC — every unilateral item has explicit R then L entries.
 #   2. SL Heel Raise added (prescription #6; pogo-prep, travels well).
-#   3. RDL + SL Squat SPLIT by side (all R sets, then all L) instead of
-#      ALT-every-rep — "too complicated switching every rep." FLOOR CARD
-#      ONLY: the full 11b keeps ALT (the provider-app text names it for
-#      the squat). Same dose either way: 10/side/set x 3.
-#      Split restores continuous single-leg TUT, which ALT existed to
-#      halve -> both split items take the 30 s rest_sec, per this file's
-#      own form-on-the-last-set rule. PT sanity-check of floor
-#      composition + the split is queued in the P1 batch.
+#   3. RDL + SL Squat as ALTERNATING SETS (R set -> 10 s -> L set -> ...,
+#      Tyler 2026-08-14 evening, science-checked; supersedes the hours-old
+#      side-block revision "Floor 6", never run on the watch). The math:
+#      each leg's true inter-set recovery = 10 s + the other side's full
+#      set + 10 s (~45-50 s) — MORE than the side-block's 30 s — while
+#      enforced rest drops 6:00 -> 2:00 across the pair, and side switches
+#      fall from 19 (ALT-per-rep) to 5 per exercise. Refs: 2025 Sports Med
+#      superset meta-analysis (Weakley et al. — same chronic adaptations,
+#      ~40% less time); 2024 Frontiers Bayesian rest meta (at sub-failure
+#      rehab dose, rest protects FORM, not adaptation). ENCODING: six
+#      single-set entries per exercise; the 10 s inter-exercise transition
+#      IS the gap — no rest_sec needed. Same dose: 3x10/side. Full 11b
+#      keeps ALT-per-rep; PT check of composition + format queued in P1.
 FLOOR_EXERCISES = [
     # ── Block A: FLOOR (mat, gym ball, ankle weights) ───────────────────
     {"name": "SL Bridge R (involved)",   "sets": 3, "reps": 10, "hold_sec": 0,  "notes": "Involved side first while fresh. Ham LSI 86%"},
@@ -100,18 +105,26 @@ FLOOR_EXERCISES = [
     {"name": "Side Abduction R 5lb",     "sets": 3, "reps": 10, "hold_sec": 3,  "notes": "5 lb ankle weight on the WORKING leg. Glute med"},
     {"name": "Side Abduction L 5lb",     "sets": 3, "reps": 10, "hold_sec": 3,  "notes": "5 lb. Non-weightbearing, varus cue does not apply"},
 
-    # ── Block B: LOADED STANDING ────────────────────────────────────────
-    {"name": "SL Goblet RDL R",          "sets": 3, "reps": 10, "hold_sec": 0,  "rest_sec": 30, "notes": "SPLIT by side (floor card). Light KB = control rule. Varus cue"},
-    {"name": "SL Goblet RDL L",          "sets": 3, "reps": 10, "hold_sec": 0,  "rest_sec": 30, "notes": "Varus cue - knee over middle of foot"},
+    # ── Block B: LOADED STANDING — alternating sets R⇄L ─────────────────
+    {"name": "SL Goblet RDL R 1/3",      "sets": 1, "reps": 10, "hold_sec": 0,  "notes": "ALTERNATE SETS: R, 10s, L. Light KB = control rule. Varus cue"},
+    {"name": "SL Goblet RDL L 1/3",      "sets": 1, "reps": 10, "hold_sec": 0,  "notes": "Varus cue - knee over middle of foot"},
+    {"name": "SL Goblet RDL R 2/3",      "sets": 1, "reps": 10, "hold_sec": 0,  "notes": "Working leg rested through the whole L set"},
+    {"name": "SL Goblet RDL L 2/3",      "sets": 1, "reps": 10, "hold_sec": 0,  "notes": "Varus cue"},
+    {"name": "SL Goblet RDL R 3/3",      "sets": 1, "reps": 10, "hold_sec": 0,  "notes": "Last set - form check: knee over mid-foot"},
+    {"name": "SL Goblet RDL L 3/3",      "sets": 1, "reps": 10, "hold_sec": 0,  "notes": "Last set - form check"},
 
     # ── Block C: STANDING BODYWEIGHT ────────────────────────────────────
     {"name": "SL Heel Raise R",          "sets": 3, "reps": 10, "hold_sec": 0,  "notes": "Gastroc. Also direct prep for ankle-dominant pogos"},
     {"name": "SL Heel Raise L",          "sets": 3, "reps": 10, "hold_sec": 0,  "notes": "Slow lower"},
-    {"name": "SL Squat R",               "sets": 3, "reps": 10, "hold_sec": 0,  "rest_sec": 30, "notes": "SPLIT by side (floor card). Varus cue. Depth = control"},
-    {"name": "SL Squat L",               "sets": 3, "reps": 10, "hold_sec": 0,  "rest_sec": 30, "notes": "Varus cue - knee over middle of foot"},
+    {"name": "SL Squat R 1/3",           "sets": 1, "reps": 10, "hold_sec": 0,  "notes": "ALTERNATE SETS: R, 10s, L. Varus cue. Depth = control"},
+    {"name": "SL Squat L 1/3",           "sets": 1, "reps": 10, "hold_sec": 0,  "notes": "Varus cue - knee over middle of foot"},
+    {"name": "SL Squat R 2/3",           "sets": 1, "reps": 10, "hold_sec": 0,  "notes": "Depth = control"},
+    {"name": "SL Squat L 2/3",           "sets": 1, "reps": 10, "hold_sec": 0,  "notes": "Varus cue"},
+    {"name": "SL Squat R 3/3",           "sets": 1, "reps": 10, "hold_sec": 0,  "notes": "Last set - form check: knee over mid-foot"},
+    {"name": "SL Squat L 3/3",           "sets": 1, "reps": 10, "hold_sec": 0,  "notes": "Last set - form check"},
 ]
 
-FLOOR_WORKOUT_NAME = "HEP Floor 6"  # 6 exercises, 12 entries; supersedes HEP Floor 5
+FLOOR_WORKOUT_NAME = "HEP Floor 6b"  # b = alternating sets (letter-for-encoding, mirrors 11b); 6 exercises, 20 entries
 
 # ── Rest constants ───────────────────────────────────────────────────────
 # /!\ VERIFIED 2026-08-04, and it corrected a wrong belief in the
